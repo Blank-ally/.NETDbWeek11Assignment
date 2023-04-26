@@ -10,6 +10,70 @@ namespace MovieLibrary
 {
     public class MovieManagement
     {
+        User user;
+
+        /* public MovieManagement()
+         {
+
+
+              using (var context = new MovieContext())
+             {
+                 user = new User();
+                 Console.WriteLine("Hello new user !!");
+
+                 Console.WriteLine("Please enter Your Name");
+                var name = Console.ReadLine();
+
+                 Console.WriteLine("Please enter Your Age");
+                 var age = Convert.ToInt64( Console.ReadLine());
+
+                 Console.WriteLine("Please enter Your gender (M or F)");
+                 var gender = Console.ReadLine();
+
+                 Console.WriteLine("Please enter Your zipcode");
+                 var zipcode = Console.ReadLine();
+                 ViewOcccupationsById();
+
+                 Console.WriteLine("Please enter Your occupation (enter ID)");
+                 var occ = Console.ReadLine();
+
+              //   var occupation = new Occupation();
+
+                 //occupation.Name = occ;
+
+                // context.Occupations.Add(occupation);
+                 // addd a new occuptaiont if they dont see theres on the list 
+
+                 user.Name = name;
+                 user.Age = age;
+                 user.Gender = gender.ToUpper();
+                 user.ZipCode = zipcode;
+                 user.Occupation = context.Occupations.Where(o => o.Id == Convert.ToInt64(occ)).First();
+               var  occName = context.Occupations.Where(o => o.Id == Convert.ToInt64(occ)).First().Name;
+
+                 context.Users.Add(user);
+                 context.SaveChanges();
+                 Console.WriteLine($"user : {user.Name},age: {user.Age}, {user.Gender}, zipcode: {user.ZipCode} occupation: {occName} has been created");
+
+
+
+             }
+         }*/
+
+        private void ViewOcccupationsById()
+        {
+            using (var context = new MovieContext())
+            {
+                var occupationlist = context.Occupations.ToList();
+                Console.WriteLine("Occupaions: \n");
+                foreach (var occ in occupationlist)
+                {
+                    Console.WriteLine($"occ ID:{occ.Id} occ Name:{occ.Name}\n");
+                }
+
+            }
+        }
+
         public void CreateMovie()
         {
             using (var context = new MovieContext())
@@ -25,8 +89,8 @@ namespace MovieLibrary
                 Console.WriteLine("how many genres");
                 var genre = Convert.ToInt32(Console.ReadLine());
                 var genres = new List<MovieGenre>();
-                
-                for(var i = 0; i < genre; i++)
+
+                for (var i = 0; i < genre; i++)
                 {
                     DisplayGenres();
                     Console.WriteLine(" What genre would you like to add (enter the ID):");
@@ -34,7 +98,6 @@ namespace MovieLibrary
                     var movieGenre = new MovieGenre();
                     movieGenre.Movie = movie;
                     movieGenre.Genre = context.Genres.Where(g => g.Id == genreId).First();
-                    genres.Add(movieGenre);
                     context.MovieGenres.Add(movieGenre);
 
 
@@ -42,10 +105,10 @@ namespace MovieLibrary
 
 
                 }
-               
+
                 Console.WriteLine("Enter a date (mm/dd/yyyy)");
                 var date = Console.ReadLine();
-                var isValidDate = DateTime.TryParse(date,out parsedDate);
+                var isValidDate = DateTime.TryParse(date, out parsedDate);
                 while (!isValidDate)
                 {
                     Console.WriteLine("That was not a valid date please enter the date with this format(mm/dd/yyyy): ");
@@ -53,15 +116,60 @@ namespace MovieLibrary
 
                 }
 
-                
+
                 movie.Title = movieTitle;
                 movie.ReleaseDate = parsedDate;
-                movie.MovieGenres = genres;
+
 
                 context.Movies.Add(movie);
                 context.SaveChanges();
                 Console.WriteLine("Movie created.");
 
+            }
+        }
+
+        internal void TopMovies()
+        {
+            using (var context = new MovieContext())
+            {
+                Console.WriteLine("Would you like to sort the movies by\n1)occupations\n2)ages");
+                var choice = Convert.ToInt32(Console.ReadLine());
+
+                if (choice == 1)
+                {
+
+                    var occ = context.UserMovies.ToList().Select(u => u.User.Occupation.Name).Distinct().ToList();
+
+                    occ.ForEach(o => Console.WriteLine(o));
+                }
+                else if (choice == 2)
+                {
+                    var age = context.UserMovies.ToList().Select(u => u.User.Age).Distinct().ToList();
+                    age.ForEach(a => Console.WriteLine(a));
+                    Console.WriteLine("What age range\n1) 0-10\n2) 10-18\n3) 18 and up");
+                    choice = Convert.ToInt32(Console.ReadLine());
+                    if (choice == 1)
+                    {
+                        var under11 = context.UserMovies.Where(x => x.User.Age < 11);
+                        Console.WriteLine();
+                    }
+                    else if (choice == 2)
+                    {
+                    }
+                    else if (choice == 3)
+                    {
+
+                    }
+                    else if (choice == 4)
+                    {
+
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Invalid input please enter 1 or two ");
+                    TopMovies();
+                }
             }
         }
 
@@ -174,35 +282,36 @@ namespace MovieLibrary
         }
 
         public void SearchMovie()
-        { 
+        {
 
 
-            using (var context = new MovieContext()) { 
-           
-                
-                
+            using (var context = new MovieContext())
+            {
+
+
+
                 Console.WriteLine("What Movie(s) are you looking for?");
                 var search = Console.ReadLine();
 
                 var moviesList = context.Movies.ToList();
-               var results = moviesList.Where(m => m.Title.Contains(search, StringComparison.CurrentCultureIgnoreCase)).ToList();
+                var results = moviesList.Where(m => m.Title.Contains(search, StringComparison.CurrentCultureIgnoreCase)).ToList();
 
-               // Console.WriteLine(string.Join(" ", context.MovieGenres.Where(m => m.Movie.Id == 1339)));  
 
 
                 if (results.Count > 0)
-            {
-                Console.WriteLine($"{results.Count} Result(s) found Your Media:");
-                    results.ForEach(m => Console.WriteLine($" ID: {m.Id} {m.Title} {string.Join(",", context.MovieGenres.Where(l => l.Movie.Id == m.Id))})"));
-                    
+                {
+                    Console.WriteLine($"{results.Count} Result(s) found Your Media:");
+                    results.ForEach(m => Console.WriteLine($" ID: {m.Id} {m.Title} {string.Join(",", m.MovieGenres.Select(x => x.Genre.Name))}"));
+
+
                 }
                 else
-            {
-                Console.WriteLine("Sorry we could not find a match to your search");
+                {
+                    Console.WriteLine("Sorry we could not find a match to your search");
+                }
             }
-               }
         }
-        public void DisplayGenres() 
+        public void DisplayGenres()
         {
 
             using (var context = new MovieContext())
@@ -214,10 +323,195 @@ namespace MovieLibrary
 
             }
         }
+        public void ViewUsersByID()
+        {
+            using (var context = new MovieContext())
+            {
+
+                var usersList = context.Users.ToList();
+                usersList.ForEach(m => Console.WriteLine($"ID:{m.Id} Type: {m.Name}"));
+            }
+        }
 
         public void ChangeUser()
         {
-           
+            using (var context = new MovieContext())
+            {
+
+                Console.WriteLine($"current user: {user.Id} {user.Name} ");
+
+                Console.WriteLine("Would you like to  1)change to existing\n2)new user ");
+                var input = Convert.ToInt32(Console.ReadLine());
+                if (input == 1)
+                {
+                    ViewUsersByID();
+
+                    Console.WriteLine("Enter the user ID you would like to change to ");
+                    var id = Convert.ToInt64(Console.ReadLine());
+
+                    Console.WriteLine("Are you sure you want to change users");
+                    user.Id = id;
+                }
+                else if (input == 2)
+                {
+                    MakeNewUser();
+                }
+
+                Console.WriteLine($"current user is {user.Id}, name {user.Name}");
+                // context.SaveChanges();
+
+
+            }
+
+
+
+        }
+        public void MakeNewUser()
+        {
+            using (var context = new MovieContext())
+            {
+                user = new User();
+                Console.WriteLine("Please enter Your Name");
+                var name = Console.ReadLine();
+
+                Console.WriteLine("Please enter Your Age");
+                var age = Convert.ToInt64(Console.ReadLine());
+
+                Console.WriteLine("Please enter Your gender (M or F)");
+                var gender = Console.ReadLine();
+
+                Console.WriteLine("Please enter Your zipcode");
+                var zipcode = Console.ReadLine();
+                ViewOcccupationsById();
+                Console.WriteLine("Please enter Your occupation (enter ID)");
+                var occ = Console.ReadLine();
+
+                //   var occupation = new Occupation();
+
+                //occupation.Name = occ;
+
+                // context.Occupations.Add(occupation);
+
+
+                user.Name = name;
+                user.Age = age;
+                user.Gender = gender;
+                user.ZipCode = zipcode;
+                user.Occupation = context.Occupations.Where(o => o.Id == Convert.ToInt64(occ)).First();
+                var occName = context.Occupations.Where(o => o.Id == Convert.ToInt64(occ)).First().Name;
+
+                context.Users.Add(user);
+                context.SaveChanges();
+                Console.WriteLine($"user : {user.Name},age: {user.Age}, {user.Gender}, zipcode: {user.ZipCode} occupation: {occName} has been created");
+            }
+
+        }
+
+        public void RateMovie()
+        {
+            using (var context = new MovieContext())
+            { // add  a are you sure 
+
+                Console.WriteLine("What movie would you like to rate (Enter Movies ID)");
+                VeiwMoviesById();
+                var movieId = Convert.ToInt32(Console.ReadLine());
+                var movie = context.Movies.Where(m => m.Id == movieId).First();
+                Console.WriteLine($"what would you like to rate the {movie.Title}");
+                var rating = Convert.ToInt32(Console.ReadLine());
+
+                var userMovie = new UserMovie();
+
+                userMovie.User = context.Users.Where(u => u.Id == user.Id).First();
+                userMovie.Movie = movie;
+                userMovie.Rating = rating;
+                userMovie.RatedAt = DateTime.Now;
+
+
+
+                Console.WriteLine($"user : {user.Id} {user.Name} rated {movie.Title}, rating: {rating} stars");
+                context.UserMovies.Add(userMovie);
+                context.SaveChanges();
+            }
+
+
+        }
+
+        public void VeiwUsersById()
+        {
+            using (var context = new MovieContext())
+            {
+                var usersList = context.Users.ToList();
+                usersList.ForEach(u => Console.WriteLine($"ID:{u.Id} Type: {u.Name}"));
+            }
+
+        }
+        public void PopulateNames()
+        {
+            /*
+             using the faker. net package to generate names  
+            */
+            using (var context = new MovieContext())
+            {
+                var usersList = context.Users.ToList();
+
+                usersList.ForEach(m => m.Name = Faker.Name.First());
+                context.SaveChanges();
+            }
+
+
+        }
+
+        public void RemoveUsers()
+        {
+            using (var context = new MovieContext())
+            {
+                Console.WriteLine("What user Would you like to remove?(Enter user ID)");
+                VeiwUsersById();
+                var userId = Convert.ToInt32(Console.ReadLine());
+
+                var userToRemove = context.Users.Where(u => u.Id == userId).First();
+
+                Console.WriteLine($"Your Choice is {userToRemove.Id} {userToRemove.Name} Are you sure you want to remove this user (Y)Yes or (N)No");
+                var isSure = Console.ReadLine();
+                if (isSure.ToUpper() == "Y")
+                {
+                    context.Remove(userToRemove);
+                    context.SaveChanges();
+                    Console.WriteLine("user removed");
+
+                }
+                else
+                {
+                    Console.WriteLine("users left Unchanged");
+                }
+
+            }
+        }
+        public void RemoveOccupation()
+        {
+            using (var context = new MovieContext())
+            {
+                Console.WriteLine("What user Would you like to remove?(Enter user ID)");
+                VeiwUsersById();
+                var userId = Convert.ToInt32(Console.ReadLine());
+
+                var userToRemove = context.Users.Where(u => u.Id == userId).First();
+
+                Console.WriteLine($"Your Choice is {userToRemove.Id} {userToRemove.Name} Are you sure you want to remove this user (Y)Yes or (N)No");
+                var isSure = Console.ReadLine();
+                if (isSure.ToUpper() == "Y")
+                {
+                    context.Remove(userToRemove);
+                    context.SaveChanges();
+                    Console.WriteLine("user removed");
+
+                }
+                else
+                {
+                    Console.WriteLine("users left Unchanged");
+                }
+
+            }
         }
 
 

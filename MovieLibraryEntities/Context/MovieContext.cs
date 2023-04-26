@@ -22,9 +22,9 @@ namespace MovieLibraryEntities.Context
                 .AddJsonFile("appsettings.json")
                 .Build();
 
-            optionsBuilder.UseSqlServer(
-                configuration.GetConnectionString("MovieContext")
-            );
+            optionsBuilder
+                .UseSqlServer(configuration.GetConnectionString("MovieContext"))
+                .UseLazyLoadingProxies();
         }
     }
 }

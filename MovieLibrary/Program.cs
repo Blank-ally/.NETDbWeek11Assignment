@@ -15,11 +15,12 @@
                 Console.WriteLine("3) Search Movie");
                 Console.WriteLine("4) Delete Movie");
                 Console.WriteLine("5) Edit Movie");
-                Console.WriteLine("6) Genres ");
+                Console.WriteLine("6) Rate Movie ");
                 Console.WriteLine("7) Change User ");
+                Console.WriteLine("8) View top Movies ");
                 Console.WriteLine("Enter any other key to exit.");
                 // stored user  input 
-               input = Convert.ToInt32(Console.ReadLine());
+                input = Convert.ToInt32(Console.ReadLine());
 
                 switch (input)
                 {
@@ -39,15 +40,24 @@
                         manage.EditMovie();
                         break;
                     case 6:
-                        manage.DisplayGenres();
+                        manage.RateMovie();
                         break;
                     case 7:
                         manage.ChangeUser();
-                        break;  
+                        break;
+                    case 8:
+                        manage.TopMovies();
+                        break;
+                    case 9:
+                        manage.VeiwUsersById();
+                        break;
+                    case 10:
+                        //  manage.RemoveUsers();
+                        break;
                 }
 
 
-            } while (input <= 7 && input > 0);
-                }
+            } while (input <= 10 && input > 0);
+        }
     }
 }

@@ -23,12 +23,10 @@
     <None Remove="Migrations\Data\6-7-InsertRatings.sql" />
     <None Remove="Migrations\Data\6-8-InsertRatings.sql" />
     <None Remove="Migrations\Data\6-9-InsertRatings.sql" />
+    <None Remove="Models\appsettings.json" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="appsettings.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Data\1-InsertGenres.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
@@ -72,6 +70,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Data\6-9-InsertRatings.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>
