@@ -14,13 +14,13 @@ namespace MovieLibrary
 
         // change all Convert.int32 to trypase and add ifs 
         //add logging
-    // implements new search where applicable 
+  
     // validate input 
 
          public MovieManagement()
          {
             
-
+            /*
               using (var context = new MovieContext())
              {
                  user = new User();
@@ -67,8 +67,9 @@ namespace MovieLibrary
 
 
 
-             }
+             }*/
          }
+        
 
         private void ViewOcccupationsById()
         {
@@ -86,6 +87,9 @@ namespace MovieLibrary
 
         public void CreateMovie()
         {
+            var genreId = 0;
+
+
             using (var context = new MovieContext())
             {
                 var movie = new Movie();
@@ -102,9 +106,20 @@ namespace MovieLibrary
 
                 for (var i = 0; i < genre; i++)
                 {
+                    Console.WriteLine("Would you like to \n1) Search Genres by name \n2)see a list of genres");
+                    var input = Convert.ToInt32(Console.ReadLine());
+                    if (input == 1)
+                    {
+                        SearchGenres();
+                        Console.WriteLine(" What genre would you like to add (enter the ID):");
+                        genreId = Convert.ToInt32(Console.ReadLine());
+                    }
+                    else
+                    { 
                     DisplayGenres();
                     Console.WriteLine(" What genre would you like to add (enter the ID):");
-                    var genreId = Convert.ToInt64(Console.ReadLine());
+                    genreId = Convert.ToInt32(Console.ReadLine());
+                    }
                     var movieGenre = new MovieGenre();
                     movieGenre.Movie = movie;
                     movieGenre.Genre = context.Genres.Where(g => g.Id == genreId).First();
@@ -278,12 +293,23 @@ namespace MovieLibrary
         }
         public void EditMovie()
         {
+            var movieId = 0;
             using (var context = new MovieContext())
             {
-                Console.WriteLine("What Movie Would you like to Edit?(Enter Movie ID)");
+               
+                Console.WriteLine("Would you like to\n1) search movie by title \n2)See list");
+               var  input = Convert.ToInt32(Console.ReadLine());
+                if(input == 1)
+                {
+                    SearchMovie();
+                    Console.WriteLine("What Movie Would you like to Edit?(Enter Movie ID)");
+                   movieId = Convert.ToInt32(Console.ReadLine());
+                }
+                else { 
                 VeiwMoviesById();
-                var movieId = Convert.ToInt32(Console.ReadLine());
-
+                Console.WriteLine("What Movie Would you like to Edit?(Enter Movie ID)");
+                 movieId = Convert.ToInt32(Console.ReadLine());
+                }
                 var movieToUpdate = context.Movies.Where(m => m.Id == movieId).First();
                 var oldMovie = movieToUpdate.Title;
                 Console.WriteLine($"Your Choice is : {movieToUpdate.Title}");
@@ -303,7 +329,7 @@ namespace MovieLibrary
             var movieId = 0;
             using (var context = new MovieContext())
             {
-                Console.WriteLine(" would you like to \n1) search for a movie\n2)see a list of movies ");
+                Console.WriteLine(" would you like to \n1) search for a movie by title\n2)see a list of movies ");
 
                 var  input = Console.ReadLine();
 
@@ -400,20 +426,30 @@ namespace MovieLibrary
 
         public void ChangeUser()
         {
+            var id = 0;
             using (var context = new MovieContext())
             {
 
                 Console.WriteLine($"current user: {user.Id} {user.Name} ");
 
-                Console.WriteLine("Would you like to  1)change to existing\n2)new user ");
+                Console.WriteLine("Would you like to \n1)change to existing\n2)new user ");
                 var input = Convert.ToInt32(Console.ReadLine());
                 if (input == 1)
                 {
+                    Console.WriteLine("Would you like to\n 1) see a list of existing users\n2)Search for user by name");
+                    var choice = Convert.ToInt32(Console.ReadLine());
+                    if (choice ==  1) { 
                     ViewUsersByID();
 
                     Console.WriteLine("Enter the user ID you would like to change to ");
-                    var id = Convert.ToInt64(Console.ReadLine());
-
+                    id = Convert.ToInt64(Console.ReadLine());
+                     }
+                    else if (choice == 2)
+                    {
+                        SearchUsers();
+                        Console.WriteLine("Enter the user ID you would like to change to ");
+                        id = Convert.ToInt64(Console.ReadLine());
+                    }
                     Console.WriteLine("Are you sure you want to change users");
                     user.Id = id;
                 }
@@ -422,7 +458,7 @@ namespace MovieLibrary
                     MakeNewUser();
                 }
 
-                Console.WriteLine($"current user is {user.Id}, name {user.Name}");
+                Console.WriteLine($"current user is now user: {user.Id}, name {user.Name}");
                 // context.SaveChanges();
 
 
@@ -433,6 +469,7 @@ namespace MovieLibrary
         }
         public void MakeNewUser()
         {
+            var occ = 0;
             using (var context = new MovieContext())
             {
                 user = new User();
@@ -447,9 +484,22 @@ namespace MovieLibrary
 
                 Console.WriteLine("Please enter Your zipcode");
                 var zipcode = Console.ReadLine();
-                ViewOcccupationsById();
-                Console.WriteLine("Please enter Your occupation (enter ID)");
-                var occ = Console.ReadLine();
+
+
+                Console.WriteLine("Would you like to \n1) view a list of occupations by name  \n2) search a occupation by name ");
+                var input = Convert.ToInt32(Console.ReadLine());
+                if (input == 1)
+                {
+                    ViewOcccupationsById();
+                    Console.WriteLine("Please enter Your occupation (enter ID)");
+                    occ = Convert.ToInt32(Console.ReadLine());
+                }else if (input == 2)
+                {
+                    SearchOccupation();
+                    Console.WriteLine("Please enter Your occupation (enter ID)");
+                    occ = Convert.ToInt32(Console.ReadLine());
+                }
+               
 
                 //   var occupation = new Occupation();
 
