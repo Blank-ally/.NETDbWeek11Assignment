@@ -1,5 +1,6 @@
 ﻿using MovieLibraryEntities.Context;
 using MovieLibraryEntities.Models;
+using Pastel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +16,8 @@ namespace MovieLibrary
         // change all Convert.int32 to trypase and add ifs 
         //add logging
   
-    // validate input 
+    // validate input further 
+  //  add whiles to searches make it like create movie method and run more tests 
 
          public MovieManagement()
          {
@@ -88,55 +90,83 @@ namespace MovieLibrary
         public void CreateMovie()
         {
             var genreId = 0;
+            var input = 0;
+           
 
 
             using (var context = new MovieContext())
             {
+
+                Console.ForegroundColor = ConsoleColor.DarkBlue;
+
+
                 var movie = new Movie();
                 DateTime parsedDate;
 
-                Console.WriteLine("Enter a Movie Title ");
+                Console.WriteLine("\nEnter the title of your movie".Pastel("#124542"));
                 var movieTitle = Console.ReadLine();
 
 
 
-                Console.WriteLine("how many genres");
+                Console.WriteLine("\nHow many genres are you looking for?".Pastel("#124542"));
                 var genre = Convert.ToInt32(Console.ReadLine());
                 var genres = new List<MovieGenre>();
 
                 for (var i = 0; i < genre; i++)
                 {
-                    Console.WriteLine("Would you like to \n1) Search Genres by name \n2)see a list of genres");
-                    var input = Convert.ToInt32(Console.ReadLine());
+                    Console.WriteLine("\nWould you like to: \n1) Search genres by name, \n2) See a list of genres".Pastel("#124542"));
+                    bool isvalid = int.TryParse(Console.ReadLine(), out input);
+                    while (!isvalid)
+                    {
+                        Console.WriteLine("Please enter a valid number option");
+                        isvalid = int.TryParse(Console.ReadLine(), out input);
+
+                    }
                     if (input == 1)
                     {
-                        SearchGenres();
-                        Console.WriteLine(" What genre would you like to add (enter the ID):");
-                        genreId = Convert.ToInt32(Console.ReadLine());
+                        var sear = SearchGenres();
+                        while(sear == 0)
+                        {
+                            sear = SearchGenres();
+                        }
+                        Console.WriteLine("\nWhat genre would you like to add? (Please enter the ID):".Pastel("#124542"));
+                         isvalid = int.TryParse(Console.ReadLine(), out genreId);
+                        while (!isvalid)
+                        {
+                            Console.WriteLine("Please enter a valid number option");
+                            isvalid = int.TryParse(Console.ReadLine(), out genreId);
+
+                        }
                     }
                     else
                     { 
                     DisplayGenres();
-                    Console.WriteLine(" What genre would you like to add (enter the ID):");
-                    genreId = Convert.ToInt32(Console.ReadLine());
+                    Console.WriteLine("\nWhat genre(s) would you like to add? (Please enter the ID):".Pastel("#124542"));
+                        isvalid = int.TryParse(Console.ReadLine(), out genreId);
+                        while (!isvalid)
+                        {
+                            Console.WriteLine("Please enter a valid number option");
+                            isvalid = int.TryParse(Console.ReadLine(), out genreId);
+
+                        }
                     }
                     var movieGenre = new MovieGenre();
                     movieGenre.Movie = movie;
                     movieGenre.Genre = context.Genres.Where(g => g.Id == genreId).First();
                     context.MovieGenres.Add(movieGenre);
 
-
+                    
 
 
 
                 }
 
-                Console.WriteLine("Enter a date (mm/dd/yyyy)");
+                Console.WriteLine("\nEnter a date (mm/dd/yyyy):".Pastel("#124542"));
                 var date = Console.ReadLine();
                 var isValidDate = DateTime.TryParse(date, out parsedDate);
                 while (!isValidDate)
                 {
-                    Console.WriteLine("That was not a valid date please enter the date with this format(mm/dd/yyyy): ");
+                    Console.WriteLine("\nThat is not a valid date, please enter the date with the following format (mm/dd/yyyy): ".Pastel("#124542"));
                     isValidDate = DateTime.TryParse(date, out parsedDate);
 
                 }
@@ -148,7 +178,7 @@ namespace MovieLibrary
 
                 context.Movies.Add(movie);
                 context.SaveChanges();
-                Console.WriteLine("Movie created.");
+                Console.WriteLine("\nMovie created.".Pastel("#124542"));
 
             }
         }
@@ -392,7 +422,7 @@ namespace MovieLibrary
                 if (results.Count > 0)
                 {
                     Console.WriteLine($"{results.Count} Result(s) found Your Media:");
-                    results.ForEach(m => Console.WriteLine($" ID: {m.Id} {m.Title} {string.Join(",", m.MovieGenres.Select(x => x.Genre.Name))}"));
+                    results.ForEach(m => Console.WriteLine($" ID: {m.Id} {m.Title} Genres: {string.Join(",", m.MovieGenres.Select(x => x.Genre.Name))}"));
 
 
                 }
@@ -442,13 +472,13 @@ namespace MovieLibrary
                     ViewUsersByID();
 
                     Console.WriteLine("Enter the user ID you would like to change to ");
-                    id = Convert.ToInt64(Console.ReadLine());
+                    id = Convert.ToInt32(Console.ReadLine());
                      }
                     else if (choice == 2)
                     {
                         SearchUsers();
                         Console.WriteLine("Enter the user ID you would like to change to ");
-                        id = Convert.ToInt64(Console.ReadLine());
+                        id = Convert.ToInt32(Console.ReadLine());
                     }
                     Console.WriteLine("Are you sure you want to change users");
                     user.Id = id;
@@ -477,7 +507,7 @@ namespace MovieLibrary
                 var name = Console.ReadLine();
 
                 Console.WriteLine("Please enter Your Age");
-                var age = Convert.ToInt64(Console.ReadLine());
+                var age = Convert.ToInt32(Console.ReadLine());
 
                 Console.WriteLine("Please enter Your gender (M or F)");
                 var gender = Console.ReadLine();
@@ -694,14 +724,14 @@ namespace MovieLibrary
                 }
             }
         }
-        public void SearchGenres()
+        public int SearchGenres()
         {
             using (var context = new MovieContext())
             {
 
 
 
-                Console.WriteLine("What Movie(s) are you looking for?");
+                Console.WriteLine("What Genre(s) are you looking for?");
                 var search = Console.ReadLine();
 
                 var genreList = context.Genres.ToList();
@@ -720,6 +750,8 @@ namespace MovieLibrary
                 {
                     Console.WriteLine("Sorry we could not find a match to your search");
                 }
+
+                return results.Count;
             }
         }
 
