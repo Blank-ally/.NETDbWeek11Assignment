@@ -192,7 +192,7 @@ namespace MovieLibrary
 
                 context.Movies.Add(movie);
                 context.SaveChanges();
-                Console.WriteLine($"\nTitle: {movie.Title}, Release date: {movie.ReleaseDate}, Genres: {string.Join(",", m.MovieGenres.Select(x => x.Genre.Name))}  created.".Pastel("#124542"));
+                Console.WriteLine($"\nTitle: {movie.Title}, Release date: {movie.ReleaseDate.Pastel("#9CDEDA")}, Genres: {string.Join(",", movie.MovieGenres.Select(x => x.Genre.Name)).Pastel()}) created.".Pastel("#124542"));
 
             }
         }
