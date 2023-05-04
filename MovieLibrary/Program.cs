@@ -5,8 +5,13 @@ namespace MovieLibrary
 {
     internal class Program
     {
+
+       
+
         static void Main(string[] args)
         {
+
+
             int input;
             string title = @"    __  ___           _         _   __            _             __            
    /  |/  /___ _   __(_)__     / | / /___ __   __(_)___ _____ _/ /_____  _____
@@ -42,7 +47,7 @@ namespace MovieLibrary
                 bool isvalid = int.TryParse(Console.ReadLine(),out input );
                 while (!isvalid)
                 {
-                    Console.WriteLine("Please enter a valid number option");
+                    Console.WriteLine("Please enter a valid number option".Pastel("#b30000"));
                     isvalid = int.TryParse(Console.ReadLine(), out input);
 
                 }
