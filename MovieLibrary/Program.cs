@@ -57,32 +57,33 @@ namespace MovieLibrary
                     case 1:
                         manage.CreateMovie();
                         break;
+                   
                     case 2:
-                        manage.VeiwMovies();
-                        break;
-                    case 3:
                         manage.SearchMovie();
                         break;
-                    case 4:
+                    case 3:
                         manage.DeleteMovie();
                         break;
-                    case 5:
+                    case 4:
                         manage.EditMovie();
                         break;
-                    case 6:
+                    case 5:
                         manage.RateMovie();
                         break;
-                    case 7:
+                    case 6:
                         manage.ChangeUser();
                         break;
-                    case 8:
+                    case 7:
                         manage.TopMovies();
                         break;
-                    case 9:
+                    case 8:
                         manage.VeiwUsersById();
                         break;
+                    case 9:
+                         manage.RemoveUsers();
+                        break;
                     case 10:
-                        //  manage.RemoveUsers();
+                        manage.RemoveOccupation();
                         break;
                 }
 

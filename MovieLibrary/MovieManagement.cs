@@ -77,13 +77,17 @@ namespace MovieLibrary
         
 
          public MovieManagement()//TODO
-         {/*
-              using (var context = new MovieContext())
+        {
+            var mess = "Hello new user !!";
+            Console.WriteLine(String.Format("{0," + ((Console.WindowWidth / 2) + (mess.Length / 2)) + "}", mess));
+          
+            using (var context = new MovieContext())
              {
                  user = new User();
-                 Console.WriteLine("Hello new user !!");
+
+                 
                  Console.WriteLine("Please enter Your Name");
-                var name = Console.ReadLine();
+                  var name = Console.ReadLine();
                  Console.WriteLine("Please enter Your Age");
                  var age = Convert.ToInt64( Console.ReadLine());
                  Console.WriteLine("Please enter Your gender (M or F)");
@@ -91,12 +95,24 @@ namespace MovieLibrary
                  Console.WriteLine("Please enter Your zipcode");
                  var zipcode = Console.ReadLine();
                  ViewOcccupationsById();
-                 Console.WriteLine("Please enter Your occupation (enter ID)");
-                 var occ = Console.ReadLine();
-              //   var occupation = new Occupation();
-                 //occupation.Name = occ;
-                // context.Occupations.Add(occupation);
-                 // addd a new occuptaiont if they dont see theres on the list 
+                 Console.WriteLine("Please enter Your occupation (enter ID) or 0 if you  dont see you occupation ");
+                bool isvalid = int.TryParse(Console.ReadLine(), out var occ); 
+
+                while (!isvalid)
+                {
+                    Console.WriteLine("Please enter a valid number option".Pastel("#b30000"));
+                    isvalid = int.TryParse(Console.ReadLine(), out occ);
+
+
+                }
+                if ( occ == 0) { 
+                 var occupation = new Occupation();
+                    Console.WriteLine("Please enter You occupation name");
+                    var newoccName = Console.ReadLine();
+                 occupation.Name = newoccName;
+                 context.Occupations.Add(occupation);
+                 }
+                
                  user.Name = name;
                  user.Age = age;
                  user.Gender = gender.ToUpper();
@@ -106,8 +122,8 @@ namespace MovieLibrary
                  context.Users.Add(user);
                  context.SaveChanges();
                  Console.WriteLine($"user : {user.Name},age: {user.Age}, {user.Gender}, zipcode: {user.ZipCode} occupation: {occName} has been created");
-             }*/
-         }
+             }
+        }
         private void ViewOcccupationsById()
         {
             using (var context = new MovieContext())
@@ -149,7 +165,7 @@ namespace MovieLibrary
                 {
                     Console.WriteLine("Please enter a valid number option".Pastel("#b30000"));
                     isvalid = int.TryParse(Console.ReadLine(), out genre);
-                 //   _logger.Log(LogLevel.Information, "invalid input ");
+           
 
                 }
 
@@ -206,12 +222,12 @@ namespace MovieLibrary
                 }
 
                 Console.WriteLine("\nEnter a date (mm/dd/yyyy):".Pastel("#124542"));
-                var date = Console.ReadLine();
-                var isValidDate = DateTime.TryParse(date, out parsedDate);
+                
+                var isValidDate = DateTime.TryParse(Console.ReadLine(), out parsedDate);
                 while (!isValidDate)
                 {
                     Console.WriteLine("\nThat is not a valid date, please enter the date with the following format (mm/dd/yyyy): ".Pastel("#b30000"));
-                    isValidDate = DateTime.TryParse(date, out parsedDate);
+                    isValidDate = DateTime.TryParse(Console.ReadLine(), out parsedDate);
 
                 }
 
@@ -291,7 +307,7 @@ namespace MovieLibrary
 
                             }
                             var selectOcc = context.UserMovies.Where(u => u.User.Occupation.Id == occID).OrderBy(u => u.Movie.Title).First();
-                            Console.WriteLine($"Occupation: {selectOcc.User.Occupation.Name} Top Rated Movie: {selectOcc.Movie.Title}");
+                            Console.WriteLine($"Occupation: {selectOcc.User.Occupation.Name.Pastel("#9CDEDA")} Top Rated Movie: {selectOcc.Movie.Title.Pastel("#9CDEDA")}");
 
 
                         }
@@ -299,7 +315,7 @@ namespace MovieLibrary
                     else if (choice == 2)
                     {
                         var occ = context.Occupations.ToList();
-                        occ.ForEach(o => Console.WriteLine($"occupation: {o.Name} Top rated movie :{context.UserMovies.Where(u => u.Rating == 5 && u.User.Occupation.Id == o.Id).OrderBy(u => u.Movie.Title).First().Movie.Title}\n ".Pastel("#7DD3CE")));
+                        occ.ForEach(o => Console.WriteLine($"occupation: {o.Name.Pastel("#9CDEDA")} Top rated movie :{context.UserMovies.Where(u => u.Rating == 5 && u.User.Occupation.Id == o.Id).OrderBy(u => u.Movie.Title).First().Movie.Title.Pastel("#9CDEDA")}\n ".Pastel("#7DD3CE")));
                     }
 
                 }
@@ -307,7 +323,7 @@ namespace MovieLibrary
                 {
                     // var age = context.UserMovies.ToList().Select(u => u.User.Age).Distinct().ToList();
                     //age.ForEach(a => Console.WriteLine(a));
-                    Console.WriteLine("What age range\n1) Rated General(childern up to 13) \n2) Rated PG (Parental guidance for 13 and up)\n3) Rated R (17 and up)");
+                    Console.WriteLine("What age range\n1) Rated General(childern up to 13) \n2) Rated PG (Parental guidance for 13 and up)\n3) Rated R (17 and up)".Pastel("#7DD3CE"));
                     isvalid = int.TryParse(Console.ReadLine(), out  choice);
                     while (!isvalid)
                     {
@@ -319,7 +335,7 @@ namespace MovieLibrary
                     if (choice == 1)
                     {
                         var under13 = context.UserMovies.Where(x => x.User.Age < 13 && x.Rating == 5).OrderBy(u => u.Movie.Title).First();
-                        Console.WriteLine($"Age Range: childern up to 13 Top Movie: {under13.Movie.Title}");
+                        Console.WriteLine($"Age Range: childern up to 13 Top Movie: {under13.Movie.Title.Pastel("#9CDEDA")}".Pastel("#7DD3CE"));
 
                        // Console.WriteLine(under13.Count());
                     }
@@ -327,19 +343,19 @@ namespace MovieLibrary
                     {
 
                         var upTo13 = context.UserMovies.Where(x => x.User.Age <= 13 && x.Rating == 5).OrderBy(u => u.Movie.Title).First();
-                        Console.WriteLine($"Age Range: 13 and up Top Movie: {upTo13.Movie.Title}");
+                        Console.WriteLine($"Age Range: 13 and up Top Movie: {upTo13.Movie.Title.Pastel("#9CDEDA")}".Pastel("#7DD3CE"));
                     }
 
                     else if (choice == 3)
                     {
                         var over13 = context.UserMovies.Where(x => x.User.Age > 17 && x.Rating == 5).OrderBy(u => u.Movie.Title).First();
-                        Console.WriteLine($"Age Range: 13 and up Top Movie: {over13.Movie.Title}");
+                        Console.WriteLine($"Age Range: 13 and up Top Movie: {over13.Movie.Title.Pastel("#9CDEDA")}".Pastel("#7DD3CE"));
                     }
                    
                 }
                 else
                 {
-                    Console.WriteLine("Invalid input please enter 1 or two ");
+                    Console.WriteLine("Invalid input please enter 1 or two ".Pastel("#b30000"));
                     TopMovies();
                 }
             }
@@ -407,7 +423,7 @@ namespace MovieLibrary
             using (var context = new MovieContext())
             {
                
-                Console.WriteLine("Would you like to\n1) search movie by title \n2)See list");
+                Console.WriteLine("Would you like to\n1) search movie by title \n2)See list".Pastel("#20B2AA"));
                 var isvalid = int.TryParse(Console.ReadLine(), out var input);
                 while (!isvalid)
                 {
@@ -418,7 +434,7 @@ namespace MovieLibrary
                 if (input == 1)
                 {
                     SearchMovie();
-                    Console.WriteLine("What Movie Would you like to Edit?(Enter Movie ID)");
+                    Console.WriteLine("What Movie Would you like to Edit?(Enter Movie ID)".Pastel("#20B2AA"));
                     isvalid = int.TryParse(Console.ReadLine(), out  movieId);
                     while (!isvalid)
                     {
@@ -429,7 +445,7 @@ namespace MovieLibrary
                 }
                 else { 
                 VeiwMoviesById();
-                Console.WriteLine("What Movie Would you like to Edit?(Enter Movie ID)");
+                Console.WriteLine("What Movie Would you like to Edit?(Enter Movie ID)".Pastel("#20B2AA"));
                     isvalid = int.TryParse(Console.ReadLine(), out movieId);
                     while (!isvalid)
                     {
@@ -440,13 +456,13 @@ namespace MovieLibrary
                 }
                 var movieToUpdate = context.Movies.Where(m => m.Id == movieId).First();
                 var oldMovie = movieToUpdate.Title;
-                Console.WriteLine($"Your Choice is : {movieToUpdate.Title}");
+                Console.WriteLine($"Your Choice is : {movieToUpdate.Title.Pastel("#9CDEDA")} ".Pastel("#20B2AA"));
 
-                Console.WriteLine("What do you want to name the Movie?");
+                Console.WriteLine("What do you want to name the Movie?".Pastel("#20B2AA"));
                 var updatedTitle = Console.ReadLine();
                 movieToUpdate.Title = updatedTitle;
                 context.SaveChanges();
-                Console.WriteLine($"{oldMovie} is now titled {movieToUpdate.Title}");
+                Console.WriteLine($"{oldMovie} is now titled {movieToUpdate.Title.Pastel("#9CDEDA")}".Pastel("#20B2AA"));
 
 
             }
@@ -457,14 +473,14 @@ namespace MovieLibrary
             var movieId = 0;
             using (var context = new MovieContext())
             {
-                Console.WriteLine(" would you like to \n1) search for a movie by title\n2)see a list of movies ");
+                Console.WriteLine(" would you like to \n1) search for a movie by title\n2)see a list of movies ".Pastel("#248A84"));
 
                 var  input = Console.ReadLine();
 
                 if (input == "1")
                 {
                     SearchMovie();
-                    Console.WriteLine("What Movie Would you like to remove?(Enter Movie ID)");
+                    Console.WriteLine("What Movie Would you like to remove?(Enter Movie ID)".Pastel("#248A84"));
                    var  isvalid = int.TryParse(Console.ReadLine(), out movieId);
                     while (!isvalid)
                     {
@@ -475,7 +491,7 @@ namespace MovieLibrary
                 }
                 else if (input == "2")
                 {
-                    Console.WriteLine("What Movie Would you like to remove?(Enter Movie ID)");
+                    Console.WriteLine("What Movie Would you like to remove?(Enter Movie ID)".Pastel("#248A84"));
                     VeiwMoviesById();
                   var  isvalid = int.TryParse(Console.ReadLine(), out movieId);
                     while (!isvalid)
@@ -485,25 +501,36 @@ namespace MovieLibrary
 
                     }
                 }
-              
+
+                while (context.Movies.Where(m => movieId == m.Id).ToList().Count == 0)
+                {
+                    var isvalid = int.TryParse(Console.ReadLine(), out movieId);
+                    while (!isvalid)
+                    {
+                        Console.WriteLine("Please enter a valid number option".Pastel("#b30000"));
+                        isvalid = int.TryParse(Console.ReadLine(), out movieId);
+
+                    }
+
+                }
 
 
                
 
                 var movieToUpdate = context.Movies.Where(m => m.Id == movieId).First();
 
-                Console.WriteLine($"Your Choice is {movieToUpdate.Title} Are you sure you want to remove this Movie (Y)Yes or (N)No");
+                Console.WriteLine($"Your Choice is {movieToUpdate.Title.Pastel("#9CDEDA")} Are you sure you want to remove this Movie (Y)Yes or (N)No".Pastel("#248A84"));
                 var isSure = Console.ReadLine();
                 if (isSure.ToUpper() == "Y")
                 {
                     context.Remove(movieToUpdate);
                     context.SaveChanges();
-                    Console.WriteLine("Movie removed");
+                    Console.WriteLine("Movie removed".Pastel("#248A84"));
 
                 }
                 else
                 {
-                    Console.WriteLine("Movies left Unchanged");
+                    Console.WriteLine("Movies left Unchanged".Pastel("#248A84"));
                 }
 
 
@@ -521,7 +548,7 @@ namespace MovieLibrary
 
 
 
-                Console.WriteLine("What Movie(s) are you looking for?");
+                Console.WriteLine("What Movie(s) are you looking for?".Pastel("#1E736E"));
                 var search = Console.ReadLine();
 
                 var moviesList = context.Movies.ToList();
@@ -531,14 +558,14 @@ namespace MovieLibrary
 
                 if (results.Count > 0)
                 {
-                    Console.WriteLine($"{results.Count} Result(s) found Your Media:");
-                    results.ForEach(m => Console.WriteLine($" ID: {m.Id} {m.Title} Genres: {string.Join(",", m.MovieGenres.Select(x => x.Genre.Name))}"));
+                    Console.WriteLine($"{results.Count} Result(s) found Your Media:".Pastel("#1E736E"));
+                    results.ForEach(m => Console.WriteLine($" ID: {m.Id.ToString().Pastel("#1E736E")} {m.Title.Pastel("#1E736E")} Genres: {string.Join(",", m.MovieGenres.Select(x => x.Genre.Name)).Pastel("#1E736E")}"));
 
 
                 }
                 else
                 {
-                    Console.WriteLine("Sorry we could not find a match to your search");
+                    Console.WriteLine("Sorry we could not find a match to your search".Pastel("#b30000"));
                 }
             }
         }
@@ -570,35 +597,70 @@ namespace MovieLibrary
             using (var context = new MovieContext())
             {
 
-                Console.WriteLine($"current user: {user.Id} {user.Name} ");
+                Console.WriteLine($"current user: {user.Id.ToString().Pastel("#9CDEDA")} {user.Name.Pastel("#9CDEDA")} ".Pastel("#5EC8C2"));
 
-                Console.WriteLine("Would you like to \n1)change to existing\n2)new user ");
-                var input = Convert.ToInt32(Console.ReadLine());
+                Console.WriteLine("Would you like to \n1)change to existing\n2)new user ".Pastel("#5EC8C2"));
+               var isvalid = int.TryParse(Console.ReadLine(), out var input);
+                while (!isvalid)
+                {
+                    Console.WriteLine("Please enter a valid number option".Pastel("#b30000"));
+                    isvalid = int.TryParse(Console.ReadLine(), out input);
+
+                }
                 if (input == 1)
                 {
-                    Console.WriteLine("Would you like to\n 1) see a list of existing users\n2)Search for user by name");
-                    var choice = Convert.ToInt32(Console.ReadLine());
+                    Console.WriteLine("Would you like to\n 1) see a list of existing users\n2)Search for user by name".Pastel("#5EC8C2"));
+                    isvalid = int.TryParse(Console.ReadLine(), out var choice);
+                    while (!isvalid)
+                    {
+                        Console.WriteLine("Please enter a valid number option".Pastel("#b30000"));
+                        isvalid = int.TryParse(Console.ReadLine(), out choice);
+
+                    }
                     if (choice ==  1) { 
                     ViewUsersByID();
 
-                    Console.WriteLine("Enter the user ID you would like to change to ");
-                    id = Convert.ToInt32(Console.ReadLine());
-                     }
+                    Console.WriteLine("Enter the user ID you would like to change to ".Pastel("#5EC8C2"));
+                        isvalid = int.TryParse(Console.ReadLine(), out id);
+                        while (!isvalid)
+                        {
+                            Console.WriteLine("Please enter a valid number option".Pastel("#b30000"));
+                            isvalid = int.TryParse(Console.ReadLine(), out id);
+
+                        }
+                       
+                    }
                     else if (choice == 2)
                     {
                         SearchUsers();
-                        Console.WriteLine("Enter the user ID you would like to change to ");
-                        id = Convert.ToInt32(Console.ReadLine());
+                        Console.WriteLine("Enter the user ID you would like to change to ".Pastel("#5EC8C2"));
+                        isvalid = int.TryParse(Console.ReadLine(), out id);
+                        while (!isvalid)
+                        {
+                            Console.WriteLine("Please enter a valid number option".Pastel("#b30000"));
+                            isvalid = int.TryParse(Console.ReadLine(), out id);
+
+                        }
                     }
-                    Console.WriteLine("Are you sure you want to change users");
-                    user.Id = id;
+
+                    Console.WriteLine("Are you sure you want to change users (Y)es or (N)o".Pastel("#5EC8C2"));
+                    var input2 = Console.ReadLine();
+                    if (input2.ToUpper() == "Y")
+                    {
+
+                        user.Id = id;
+                    }
+                    
+                   
+                    
+                   //FINISH________________________________________________________________________________________________________________
                 }
                 else if (input == 2)
                 {
                     MakeNewUser();
                 }
 
-                Console.WriteLine($"current user is now user: {user.Id}, name {user.Name}");
+                Console.WriteLine($"current user is now user: {user.Id.ToString().Pastel("#9CDEDA")}, name {user.Name.Pastel("#9CDEDA")}".Pastel("#5EC8C2"));
                 // context.SaveChanges();
 
 
@@ -617,7 +679,13 @@ namespace MovieLibrary
                 var name = Console.ReadLine();
 
                 Console.WriteLine("Please enter Your Age");
-                var age = Convert.ToInt32(Console.ReadLine());
+               var isvalid = int.TryParse(Console.ReadLine(), out var age);
+                while (!isvalid)
+                {
+                    Console.WriteLine("Please enter a valid number option".Pastel("#b30000"));
+                    isvalid = int.TryParse(Console.ReadLine(), out age);
+
+                }
 
                 Console.WriteLine("Please enter Your gender (M or F)");
                 var gender = Console.ReadLine();
@@ -627,17 +695,36 @@ namespace MovieLibrary
 
 
                 Console.WriteLine("Would you like to \n1) view a list of occupations by name  \n2) search a occupation by name ");
-                var input = Convert.ToInt32(Console.ReadLine());
+                isvalid = int.TryParse(Console.ReadLine(), out var input);
+                while (!isvalid)
+                {
+                    Console.WriteLine("Please enter a valid number option".Pastel("#b30000"));
+                    isvalid = int.TryParse(Console.ReadLine(), out input);
+
+                }
                 if (input == 1)
                 {
                     ViewOcccupationsById();
                     Console.WriteLine("Please enter Your occupation (enter ID)");
-                    occ = Convert.ToInt32(Console.ReadLine());
-                }else if (input == 2)
+                    isvalid = int.TryParse(Console.ReadLine(), out  occ);
+                    while (!isvalid)
+                    {
+                        Console.WriteLine("Please enter a valid number option".Pastel("#b30000"));
+                        isvalid = int.TryParse(Console.ReadLine(), out occ);
+
+                    }
+                }
+                else if (input == 2)
                 {
                     SearchOccupation();
                     Console.WriteLine("Please enter Your occupation (enter ID)");
-                    occ = Convert.ToInt32(Console.ReadLine());
+                    isvalid = int.TryParse(Console.ReadLine(), out occ);
+                    while (!isvalid)
+                    {
+                        Console.WriteLine("Please enter a valid number option".Pastel("#b30000"));
+                        isvalid = int.TryParse(Console.ReadLine(), out occ);
+
+                    }
                 }
                
 
@@ -667,16 +754,34 @@ namespace MovieLibrary
             using (var context = new MovieContext())
             { // add  a are you sure 
 
-                Console.WriteLine("What movie would you like to rate (Enter Movies ID)");
+                Console.WriteLine("What movie would you like to rate (Enter Movies ID)".Pastel("#3FBDB6"));
                 VeiwMoviesById();
-                var movieId = Convert.ToInt32(Console.ReadLine());
+               var isvalid = int.TryParse(Console.ReadLine(), out var movieId);
+                while (!isvalid)
+                {
+                    Console.WriteLine("Please enter a valid number option".Pastel("#b30000"));
+                    isvalid = int.TryParse(Console.ReadLine(), out movieId);
+
+                }
                 var movie = context.Movies.Where(m => m.Id == movieId).First();
-                Console.WriteLine($"what would you like to rate the {movie.Title}");
-                var rating = Convert.ToInt32(Console.ReadLine());
+                Console.WriteLine($"what would you like to rate the {movie.Title.Pastel("#9CDEDA")}".Pastel("#3FBDB6"));
+                isvalid = int.TryParse(Console.ReadLine(), out var rating);
+                while (!isvalid)
+                {
+                    Console.WriteLine("Please enter a valid number option".Pastel("#b30000"));
+                    isvalid = int.TryParse(Console.ReadLine(), out rating);
+
+                }
                 while (rating > 6)
                 {
-                    Console.WriteLine("Please enter a rating 1-5 ");
-                    rating = Convert.ToInt32(Console.ReadLine());
+                    Console.WriteLine("Please enter a rating 1-5 ".Pastel("#3FBDB6"));
+                    isvalid = int.TryParse(Console.ReadLine(), out rating);
+                    while (!isvalid)
+                    {
+                        Console.WriteLine("Please enter a valid number option".Pastel("#b30000"));
+                        isvalid = int.TryParse(Console.ReadLine(), out rating);
+
+                    }
                 }
                 var userMovie = new UserMovie();
 
@@ -687,7 +792,7 @@ namespace MovieLibrary
 
 
 
-                Console.WriteLine($"user : {user.Id} {user.Name} rated {movie.Title}, rating: {rating} stars");
+                Console.WriteLine($"user : {user.Id.ToString().Pastel("#9CDEDA")} {user.Name.Pastel("#9CDEDA")} rated {movie.Title.Pastel("#9CDEDA")}, rating: {rating.ToString().Pastel("#9CDEDA")} stars".Pastel("#3FBDB6"));
                 context.UserMovies.Add(userMovie);
                 context.SaveChanges();
 
@@ -732,7 +837,13 @@ namespace MovieLibrary
             {
                 Console.WriteLine("What user Would you like to remove?(Enter user ID)");
                 VeiwUsersById();
-                var userId = Convert.ToInt32(Console.ReadLine());
+               var isvalid = int.TryParse(Console.ReadLine(), out var userId);
+                while (!isvalid)
+                {
+                    Console.WriteLine("Please enter a valid number option".Pastel("#b30000"));
+                    isvalid = int.TryParse(Console.ReadLine(), out userId);
+
+                }
 
                 var userToRemove = context.Users.Where(u => u.Id == userId).First();
 
@@ -758,7 +869,13 @@ namespace MovieLibrary
             {
                 Console.WriteLine("What user Would you like to remove?(Enter user ID)");
                 VeiwUsersById();
-                var userId = Convert.ToInt32(Console.ReadLine());
+               var  isvalid = int.TryParse(Console.ReadLine(), out var userId);
+                while (!isvalid)
+                {
+                    Console.WriteLine("Please enter a valid number option".Pastel("#b30000"));
+                    isvalid = int.TryParse(Console.ReadLine(), out userId);
+
+                }
 
                 var userToRemove = context.Users.Where(u => u.Id == userId).First();
 
