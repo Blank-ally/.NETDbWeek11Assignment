@@ -179,6 +179,19 @@ namespace MovieLibrary
            
 
                 }
+            while(genre <= 0)
+                {
+                    Console.WriteLine("You must have genres please enter a valid number input".Pastel("#b30000"));
+                    isvalid = int.TryParse(Console.ReadLine(), out genre);
+                    while (!isvalid)
+                    {
+                        Console.WriteLine("Please enter a valid number option".Pastel("#b30000"));
+                        isvalid = int.TryParse(Console.ReadLine(), out genre);
+
+
+                    }
+
+                }
 
                 var genres = new List<MovieGenre>();
 
@@ -263,7 +276,7 @@ namespace MovieLibrary
             {
                 Console.WriteLine("Would you like to sort the movies by\n1)occupations\n2)ages".Pastel("#7DD3CE"));
                var isvalid = int.TryParse(Console.ReadLine(), out var choice);
-                while (!isvalid)
+                while (!isvalid || choice != 1 ||choice != 2)
                 {
                     Console.WriteLine("Please enter a valid number option".Pastel("#b30000"));
                     isvalid = int.TryParse(Console.ReadLine(), out  choice);
@@ -781,37 +794,91 @@ namespace MovieLibrary
             using (var context = new MovieContext())
             { // add  a are you sure 
 
-               
-                VeiwMoviesById();
-                Console.WriteLine("What movie would you like to rate (Enter Movies ID)".Pastel("#3FBDB6"));
-
-                var isvalid = int.TryParse(Console.ReadLine(), out var movieId);
-                while (!isvalid)
+                Console.WriteLine("Would you like to \n1)view a list of Movies\n2)search a movie");
+/*
+                var isvalid = int.TryParse(Console.ReadLine(), out var choice);
+                while (!isvalid || choice > 2 || choice < 1)
                 {
                     Console.WriteLine("Please enter a valid number option".Pastel("#b30000"));
-                    isvalid = int.TryParse(Console.ReadLine(), out movieId);
+                    isvalid = int.TryParse(Console.ReadLine(), out choice);
 
                 }
-                var movie = context.Movies.Where(m => m.Id == movieId).First();
-                Console.WriteLine($"what would you like to rate the {movie.Title.Pastel("#9CDEDA")}".Pastel("#3FBDB6"));
-                isvalid = int.TryParse(Console.ReadLine(), out var rating);
-                while (!isvalid)
-                {
-                    Console.WriteLine("Please enter a valid number option".Pastel("#b30000"));
-                    isvalid = int.TryParse(Console.ReadLine(), out rating);
 
-                }
-                while (rating > 6)
-                {
-                    Console.WriteLine("Please enter a rating 1-5 ".Pastel("#3FBDB6"));
-                    isvalid = int.TryParse(Console.ReadLine(), out rating);
+
+                if (choice == 1)
+                {*/
+                    VeiwMoviesById();
+
+                    Console.WriteLine("What movie would you like to rate (Enter Movies ID)".Pastel("#3FBDB6"));
+
+                   var  isvalid = int.TryParse(Console.ReadLine(), out var movieId);
+                    while (!isvalid)
+                    {
+                        Console.WriteLine("Please enter a valid number option".Pastel("#b30000"));
+                        isvalid = int.TryParse(Console.ReadLine(), out movieId);
+
+                    }
+                    var movie = context.Movies.Where(m => m.Id == movieId).First();
+
+                    Console.WriteLine($"what would you like to rate the {movie.Title.Pastel("#9CDEDA")}".Pastel("#3FBDB6"));
+                    isvalid = int.TryParse(Console.ReadLine(), out var rating);
                     while (!isvalid)
                     {
                         Console.WriteLine("Please enter a valid number option".Pastel("#b30000"));
                         isvalid = int.TryParse(Console.ReadLine(), out rating);
 
                     }
+                    while (rating > 6 || rating <= 0)
+                    {
+                        Console.WriteLine("Please enter a rating 1-5 ".Pastel("#3FBDB6"));
+                        isvalid = int.TryParse(Console.ReadLine(), out rating);
+                        while (!isvalid)
+                        {
+                            Console.WriteLine("Please enter a valid number option".Pastel("#b30000"));
+                            isvalid = int.TryParse(Console.ReadLine(), out rating);
+
+                        }
+
+                    }
+              //  }
+
+               /* else
+                {
+                    SearchMovie();
+                    Console.WriteLine("What movie would you like to rate (Enter Movies ID)".Pastel("#3FBDB6"));
+
+                    isvalid = int.TryParse(Console.ReadLine(), out var movieId);
+                    while (!isvalid)
+                    {
+                        Console.WriteLine("Please enter a valid number option".Pastel("#b30000"));
+                        isvalid = int.TryParse(Console.ReadLine(), out movieId);
+
+                    }
+                    var movie = context.Movies.Where(m => m.Id == movieId).First();
+
+                    Console.WriteLine($"what would you like to rate the {movie.Title.Pastel("#9CDEDA")}".Pastel("#3FBDB6"));
+                    isvalid = int.TryParse(Console.ReadLine(), out var rating);
+                    while (!isvalid)
+                    {
+                        Console.WriteLine("Please enter a valid number option".Pastel("#b30000"));
+                        isvalid = int.TryParse(Console.ReadLine(), out rating);
+
+                    }
+                    while (rating > 6 || rating <= 0)
+                    {
+                        Console.WriteLine("Please enter a rating 1-5 ".Pastel("#3FBDB6"));
+                        isvalid = int.TryParse(Console.ReadLine(), out rating);
+                        while (!isvalid)
+                        {
+                            Console.WriteLine("Please enter a valid number option".Pastel("#b30000"));
+                            isvalid = int.TryParse(Console.ReadLine(), out rating);
+
+                        }
+                    }
+
                 }
+                */
+
                 var userMovie = new UserMovie();
 
                 userMovie.User = context.Users.Where(u => u.Id == user.Id).First();
@@ -831,7 +898,7 @@ namespace MovieLibrary
 
 
 
-
+            // ADD VALIDATION 
 
 
         }
