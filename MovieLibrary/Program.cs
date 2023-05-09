@@ -10,7 +10,8 @@ namespace MovieLibrary
 
         static void Main(string[] args)
         {
-
+            string path = Directory.GetCurrentDirectory() + "\\nlog.config";
+            var logger = NLog.Web.NLogBuilder.ConfigureNLog(path).GetCurrentClassLogger();
 
             int input;
             string title = @"    __  ___           _         _   __            _             __            
@@ -27,6 +28,7 @@ namespace MovieLibrary
 
             do
             {
+                logger.Info("Program started");
                 Console.ForegroundColor = ConsoleColor.DarkBlue;
 
                 Console.WriteLine($"{title}");
@@ -55,33 +57,41 @@ namespace MovieLibrary
                 switch (input)
                 {
                     case 1:
+                        logger.Info("Program started");
                         manage.CreateMovie();
                         break;
 
                     case 2:
+                        logger.Info("Program started");
                         manage.VeiwMovies();
                         break;
 
                     case 3:
+                        logger.Info("Program started");
                         manage.SearchMovie();
                         break;
                     case 4:
+                        logger.Info("Program started");
                         manage.DeleteMovie();
                         break;
                     case 5:
                         manage.EditMovie();
+                        logger.Info("Program started");
                         break;
                     case 6:
                         manage.RateMovie();
+                        logger.Info("Program started");
                         break;
                     case 7:
                         manage.ChangeUser();
+                        logger.Info("Program started");
                         break;
                     case 8:
                         manage.TopMovies();
+                        logger.Info("Program started");
                         break;
                     case 9:
-                        manage.VeiwUsersById();
+                        manage.ViewUsersByID();
                         break;
                     case 10:
                          manage.RemoveUsers();

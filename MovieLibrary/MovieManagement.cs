@@ -13,7 +13,9 @@ namespace MovieLibrary
     public class MovieManagement
     {
         User user;
-       // private readonly ILogger<MovieManagement> _logger;
+     
+
+        // private readonly ILogger<MovieManagement> _logger;
 
         // change all Convert.int32 to trypase and add ifs 
         //add logging
@@ -898,7 +900,7 @@ namespace MovieLibrary
 
 
 
-            // ADD VALIDATION 
+            /*
 
 
         }
@@ -932,7 +934,7 @@ namespace MovieLibrary
             using (var context = new MovieContext())
             {
                 Console.WriteLine("What user Would you like to remove?(Enter user ID)");
-                VeiwUsersById();
+                ViewUsersByID();
                var isvalid = int.TryParse(Console.ReadLine(), out var userId);
                 while (!isvalid)
                 {
