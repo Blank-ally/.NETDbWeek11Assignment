@@ -280,7 +280,7 @@ namespace MovieLibrary
                         isvalid = int.TryParse(Console.ReadLine(), out choice);
 
                     }
-
+                    
                     if (choice == 1)
                     {
                         Console.WriteLine("Would you like to\n1)search for occupation\n2)View a list of occupations ".Pastel("#7DD3CE"));
@@ -289,6 +289,18 @@ namespace MovieLibrary
                         {
                             Console.WriteLine("Please enter a valid number option".Pastel("#b30000"));
                             isvalid = int.TryParse(Console.ReadLine(), out choice);
+
+                        }
+                        while (choice > 0 && choice < 3)
+                        {
+                            Console.WriteLine("please enter a valid number(1 or 2)".Pastel("#b30000"));
+                            isvalid = int.TryParse(Console.ReadLine(), out choice);
+                            while (!isvalid)
+                            {
+                                Console.WriteLine("Please enter a valid number option".Pastel("#b30000"));
+                                isvalid = int.TryParse(Console.ReadLine(), out choice);
+
+                            }
 
                         }
 
@@ -334,8 +346,7 @@ namespace MovieLibrary
                 }
                 else if (choice == 2)
                 {
-                    // var age = context.UserMovies.ToList().Select(u => u.User.Age).Distinct().ToList();
-                    //age.ForEach(a => Console.WriteLine(a));
+                    
                     Console.WriteLine("What age range\n1) Rated General(childern up to 13) \n2) Rated PG (Parental guidance for 13 and up)\n3) Rated R (17 and up)".Pastel("#7DD3CE"));
                     isvalid = int.TryParse(Console.ReadLine(), out  choice);
                     while (!isvalid)
@@ -350,7 +361,6 @@ namespace MovieLibrary
                         var under13 = context.UserMovies.Where(x => x.User.Age < 13 && x.Rating == 5).GroupBy(x => x.Movie.Title).Select(x => new { CountOfRatings = x.Count(), MovieTitle = x.Key }).OrderByDescending(x => x.CountOfRatings).First();
                         Console.WriteLine($"Age Range: childern up to 13 Top Movie: {under13.MovieTitle.Pastel("#9CDEDA")}".Pastel("#7DD3CE"));
 
-                       // Console.WriteLine(under13.Count());
                     }
                     else if (choice == 2)
                     {
