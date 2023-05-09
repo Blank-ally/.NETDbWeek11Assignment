@@ -283,7 +283,7 @@ namespace MovieLibrary
 
                     if (choice == 1)
                     {
-                        Console.WriteLine("Would like to\n1)search for occupation\n2)View a list of occupations ".Pastel("#7DD3CE"));
+                        Console.WriteLine("Would you like to\n1)search for occupation\n2)View a list of occupations ".Pastel("#7DD3CE"));
                          isvalid = int.TryParse(Console.ReadLine(), out  choice);
                         while (!isvalid)
                         {
@@ -295,7 +295,7 @@ namespace MovieLibrary
                         if (choice == 1)
                         {
                             SearchOccupation();
-                            Console.WriteLine(" please enter the Id of the occupation you would like see the top movie for ".Pastel("#7DD3CE"));
+                            Console.WriteLine("please enter the Id of the occupation you would like see the top movie for ".Pastel("#7DD3CE"));
                             isvalid = int.TryParse(Console.ReadLine(), out var occID);
                             while (!isvalid)
                             {
@@ -304,8 +304,9 @@ namespace MovieLibrary
 
                             }
 
-                            var selectOcc = context.UserMovies.Where(u => u.User.Occupation.Id == occID).OrderBy(u => u.Movie.Title).First();
-                            Console.WriteLine($"Occupation: {selectOcc.User.Occupation.Name} Top Rated Movie: {selectOcc.Movie.Title}");
+                            var selectOcc = context.UserMovies.Where(u => u.Rating == 5 && u.User.Occupation.Id == occID).GroupBy(x => x.Movie.Title).Select(x => new { CountOfRatings = x.Count(), MovieTitle = x.Key }).OrderByDescending(x => x.CountOfRatings).First();
+                            Console.WriteLine($"Occupation: {context.Occupations.Where(o => o.Id == occID).First().Name.Pastel("#9CDEDA")} Top Rated Movie: {selectOcc.MovieTitle.Pastel("#9CDEDA")}");
+
                         }
                         else if (choice == 2)
                         {
@@ -319,7 +320,7 @@ namespace MovieLibrary
 
                             }
                             var selectOcc = context.UserMovies.Where(u => u.Rating == 5 && u.User.Occupation.Id == occID).GroupBy(x => x.Movie.Title).Select(x => new { CountOfRatings = x.Count(), MovieTitle = x.Key }).OrderByDescending(x => x.CountOfRatings).First();
-                            Console.WriteLine($"Occupation: {selectOcc.User.Occupation.Name.Pastel("#9CDEDA")} Top Rated Movie: {selectOcc.Movie.Title.Pastel("#9CDEDA")}");
+                            Console.WriteLine($"Occupation: {context.Occupations.Where(o => o.Id  == occID).First().Name.Pastel("#9CDEDA")} Top Rated Movie: {selectOcc.MovieTitle.Pastel("#9CDEDA")}");
 
 
                         }
@@ -346,28 +347,28 @@ namespace MovieLibrary
                   
                     if (choice == 1)
                     {
-                        var under13 = context.UserMovies.Where(x => x.User.Age < 13 && x.Rating == 5).OrderBy(u => u.Movie.Title).First();
-                        Console.WriteLine($"Age Range: childern up to 13 Top Movie: {under13.Movie.Title.Pastel("#9CDEDA")}".Pastel("#7DD3CE"));
+                        var under13 = context.UserMovies.Where(x => x.User.Age < 13 && x.Rating == 5).GroupBy(x => x.Movie.Title).Select(x => new { CountOfRatings = x.Count(), MovieTitle = x.Key }).OrderByDescending(x => x.CountOfRatings).First();
+                        Console.WriteLine($"Age Range: childern up to 13 Top Movie: {under13.MovieTitle.Pastel("#9CDEDA")}".Pastel("#7DD3CE"));
 
                        // Console.WriteLine(under13.Count());
                     }
                     else if (choice == 2)
                     {
 
-                        var upTo13 = context.UserMovies.Where(x => x.User.Age <= 13 && x.Rating == 5).OrderBy(u => u.Movie.Title).First();
-                        Console.WriteLine($"Age Range: 13 and up Top Movie: {upTo13.Movie.Title.Pastel("#9CDEDA")}".Pastel("#7DD3CE"));
+                        var upTo13 = context.UserMovies.Where(x => x.User.Age <= 13 && x.Rating == 5).GroupBy(x => x.Movie.Title).Select(x => new { CountOfRatings = x.Count(), MovieTitle = x.Key }).OrderByDescending(x => x.CountOfRatings).First();
+                        Console.WriteLine($"Age Range: 13 and up Top Movie: {upTo13.MovieTitle.Pastel("#9CDEDA")}".Pastel("#7DD3CE"));
                     }
 
                     else if (choice == 3)
                     {
-                        var over13 = context.UserMovies.Where(x => x.User.Age > 17 && x.Rating == 5).OrderBy(u => u.Movie.Title).First();
-                        Console.WriteLine($"Age Range: 13 and up Top Movie: {over13.Movie.Title.Pastel("#9CDEDA")}".Pastel("#7DD3CE"));
+                        var over13 = context.UserMovies.Where(x => x.User.Age > 17 && x.Rating == 5).GroupBy(x => x.Movie.Title).Select(x => new { CountOfRatings = x.Count(), MovieTitle = x.Key }).OrderByDescending(x => x.CountOfRatings).First();
+                        Console.WriteLine($"Age Range: 17 and up Top Movie: {over13.MovieTitle.Pastel("#9CDEDA")}".Pastel("#7DD3CE"));
                     }
                    
                 }
                 else
                 {
-                    Console.WriteLine("Invalid input please enter 1 or two ".Pastel("#b30000"));
+                    Console.WriteLine("Invalid input please enter 1 or 2 ".Pastel("#b30000"));
                     TopMovies();
                 }
             }
