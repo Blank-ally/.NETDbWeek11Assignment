@@ -257,6 +257,7 @@ namespace MovieLibrary
 
         internal void TopMovies()
         {
+            var CountOfRatings = 0;
 
             using (var context = new MovieContext())
             {
@@ -317,7 +318,7 @@ namespace MovieLibrary
                                 isvalid = int.TryParse(Console.ReadLine(), out occID);
 
                             }
-                            var selectOcc = context.UserMovies.Where(u => u.User.Occupation.Id == occID).OrderBy(u => u.Movie.Title).First();
+                            var selectOcc = context.UserMovies.Where(u => u.Rating == 5 && u.User.Occupation.Id == occID).GroupBy(x => x.Movie.Title).Select(x => new { CountOfRatings = x.Count(), MovieTitle = x.Key }).OrderByDescending(x => x.CountOfRatings).First();
                             Console.WriteLine($"Occupation: {selectOcc.User.Occupation.Name.Pastel("#9CDEDA")} Top Rated Movie: {selectOcc.Movie.Title.Pastel("#9CDEDA")}");
 
 
@@ -326,7 +327,7 @@ namespace MovieLibrary
                     else if (choice == 2)
                     {
                         var occ = context.Occupations.ToList();
-                        occ.ForEach(o => Console.WriteLine($"occupation: {o.Name.Pastel("#9CDEDA")} Top rated movie :{context.UserMovies.Where(u => u.Rating == 5 && u.User.Occupation.Id == o.Id).GroupBy(m => m.Movie.Id).OrderByDescending(gp => gp.Count()).Take(1).Select(g => g.Key).First().Movie.Title.Pastel("#9CDEDA")}\n ".Pastel("#7DD3CE")));
+                        occ.ForEach(o => Console.WriteLine($"occupation: {o.Name.Pastel("#9CDEDA")} Top rated movie :{context.UserMovies.Where(u => u.Rating == 5 && u.User.Occupation.Id == o.Id).GroupBy(x => x.Movie.Title).Select(x => new { CountOfRatings = x.Count(),  MovieTitle = x.Key }).OrderByDescending(x => x.CountOfRatings).First()}\n ".Pastel("#7DD3CE")));
                     }
 
                 }
