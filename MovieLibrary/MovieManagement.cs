@@ -23,63 +23,9 @@ namespace MovieLibrary
         // validate input further 
         //  add whiles to searches make it like create movie method and run more tests 
 
-        public MovieManagement(ILogger<MovieManagement> logger)
-         {
-               // _logger = logger;
-            /*
-              using (var context = new MovieContext())
-             {
-                 user = new User();
-                 Console.WriteLine("Hello new user !!");
-
-                 Console.WriteLine("Please enter Your Name");
-                var name = Console.ReadLine();
-
-                 Console.WriteLine("Please enter Your Age");
-                 var age = Convert.ToInt64( Console.ReadLine());
-
-                 Console.WriteLine("Please enter Your gender (M or F)");
-                 var gender = Console.ReadLine();
-
-                 Console.WriteLine("Please enter Your zipcode");
-                 var zipcode = Console.ReadLine();
-
-                Console.WriteLine("");
-                 ViewOcccupationsById();
-
-                 Console.WriteLine("Please enter Your occupation (enter ID) or enter 0 if you do not see you occupation ");
-                 var occ = Convert.ToInt32(Console.ReadLine());
-               var occupation = context.Occupations.Where(o => o.Id == Convert.ToInt64(occ)).First();
-                if (occ == 0) {
-                   Console.WriteLine("No Worries we'll just make a new one ");
-                     occupation = new Occupation();
-                   Console.WriteLine("What is the occupation name");
-                   var newOccName = Console.ReadLine();
-
-                 occupation.Name = newOccName;
-
-                context.Occupations.Add(occupation);
-                  
-                    }
-                 user.Name = name;
-                 user.Age = age;
-                 user.Gender = gender.ToUpper();
-                 user.ZipCode = zipcode;
-                 user.Occupation = occupation;
-              
-                 context.Users.Add(user);
-                 context.SaveChanges();
-                 Console.WriteLine($"user :{user.Name},age: {user.Age}, {user.Gender}, zipcode: {user.ZipCode} occupation: {user.Occupation.Name} has been created");
-
-
-
-             }*/
-        } //TO DO
-
-        
 
          public MovieManagement()
-        {/*
+        {
             var mess = "Hello new user !!";
             Console.WriteLine(String.Format("{0," + ((Console.WindowWidth / 2) + (mess.Length / 2)) + "}", mess));
           
@@ -135,7 +81,7 @@ namespace MovieLibrary
                  context.Users.Add(user);
                  context.SaveChanges();
                  Console.WriteLine($"user : {user.Name},age: {user.Age}, {user.Gender}, zipcode: {user.ZipCode} occupation: {occName} has been created");
-             }*/
+             }
         }
         private void ViewOcccupationsById()
         {
@@ -272,13 +218,13 @@ namespace MovieLibrary
 
         internal void TopMovies()
         {
-            var CountOfRatings = 0;
+            
 
             using (var context = new MovieContext())
             {
                 Console.WriteLine("Would you like to sort the movies by\n1)occupations\n2)ages".Pastel("#7DD3CE"));
                var isvalid = int.TryParse(Console.ReadLine(), out var choice);
-                while (!isvalid || choice != 1 ||choice != 2)
+                while (!isvalid)
                 {
                     Console.WriteLine("Please enter a valid number option".Pastel("#b30000"));
                     isvalid = int.TryParse(Console.ReadLine(), out  choice);
@@ -966,7 +912,7 @@ namespace MovieLibrary
             using (var context = new MovieContext())
             {
                 Console.WriteLine("What user Would you like to remove?(Enter user ID)");
-                VeiwUsersById();
+                ViewUsersByID();
                var  isvalid = int.TryParse(Console.ReadLine(), out var userId);
                 while (!isvalid)
                 {
