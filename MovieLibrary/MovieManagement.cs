@@ -353,7 +353,13 @@ namespace MovieLibrary
                 var moviesList = context.Movies.ToList();
 
                 Console.WriteLine("Would you like \n1) all records\n2) A select number of records ".Pastel("#185C58"));
-                var input = Convert.ToInt32(Console.ReadLine());
+                var isvalid = int.TryParse(Console.ReadLine(), out var input);
+                while (!isvalid)
+                {
+                    Console.WriteLine("Please enter a valid number option".Pastel("#b30000"));
+                    isvalid = int.TryParse(Console.ReadLine(), out input);
+
+                }
                 switch (input)
                 {
                     case 1:
